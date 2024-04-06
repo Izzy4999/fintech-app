@@ -1,4 +1,10 @@
+import Colors from "@/constants/Colors";
+import { defaultStyles } from "@/constants/Styles";
+import { isClerkAPIResponseError, useSignUp } from "@clerk/clerk-expo";
+import { Link, router } from "expo-router";
+import React, { useState } from "react";
 import {
+  Alert,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
@@ -7,16 +13,34 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
-import { defaultStyles } from "@/constants/Styles";
-import Colors from "@/constants/Colors";
-import { Link } from "expo-router";
 
 export default function Page() {
-  const [countryCode, setCountryCode] = useState("+49");
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [email, setEmail] = useState("");
   const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
-  const onSignUp = async () => {};
+  // const router = useRouter();
+  const { signUp } = useSignUp();
+
+  const onSignUp = async () => {
+    try {
+      await signUp?.create({
+        emailAddress: email,
+      });
+      
+      await signUp!.prepareVerification({ strategy: "email_code" });
+
+      router.push({
+        pathname: "/verify/[phone]",
+        params: { email: email },
+      });
+    } catch (err) {
+      console.log("error", JSON.stringify(err, null, 2));
+      if (isClerkAPIResponseError(err)) {
+        if (err.errors[0].code === "form_identifier_not_found") {
+          Alert.alert("Error", err.errors[0].message);
+        }
+      }
+    }
+  };
 
   return (
     <KeyboardAvoidingView
@@ -31,17 +55,12 @@ export default function Page() {
         </Text>
         <View style={styles.inputContainer}>
           <TextInput
-            style={styles.input}
-            placeholder="Country code"
-            placeholderTextColor={Colors.gray}
-            value={countryCode}
-          />
-          <TextInput
             style={[styles.input, { flex: 1 }]}
             placeholder="Mobile number"
-            keyboardType="numeric"
-            value={phoneNumber}
-            onChangeText={setPhoneNumber}
+            keyboardType="email-address"
+            value={email}
+            onChangeText={setEmail}
+            autoCapitalize="none"
           />
         </View>
 
@@ -58,7 +77,7 @@ export default function Page() {
         <TouchableOpacity
           style={[
             defaultStyles.pillButton,
-            phoneNumber !== "" ? styles.enabled : styles.disabled,
+            email !== "" ? styles.enabled : styles.disabled,
             { marginBottom: 20 },
           ]}
           onPress={onSignUp}
@@ -78,6 +97,7 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: Colors.lightGray,
     padding: 20,
+    paddingHorizontal: 20,
     borderRadius: 16,
     fontSize: 20,
     marginRight: 10,
