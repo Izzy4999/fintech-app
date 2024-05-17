@@ -7,10 +7,11 @@ import { Link, Stack, useRouter, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import * as SecureStore from "expo-secure-store";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { UserInactivityProvider } from "@/context/UserInactivity";
 
 const queryClient = new QueryClient();
 
@@ -27,14 +28,15 @@ const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 const tokenCache = {
   async getToken(key: string) {
     try {
-      return SecureStore.getItemAsync(key);
+      let result = await SecureStore.getItemAsync(key);
+      return result;
     } catch (err) {
       return null;
     }
   },
   async saveToken(key: string, value: string) {
     try {
-      return SecureStore.setItemAsync(key, value);
+      return await SecureStore.setItemAsync(key, value);
     } catch (err) {
       return;
     }
@@ -57,12 +59,16 @@ function InitialLayout() {
   }, [error]);
 
   useEffect(() => {
+    if (loaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded]);
+
+  useEffect(() => {
     console.log("isSignedIn", isSignedIn);
     if (!isLoaded) return;
 
     const inAuthgroup = segments[0] === "(authenticated)";
-
-    SplashScreen.hideAsync();
 
     if (isSignedIn && !inAuthgroup) {
       router.replace("/(authenticated)/(tabs)/home");
@@ -149,6 +155,41 @@ function InitialLayout() {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="(authenticated)/crypto/[id]"
+        options={{
+          title: "",
+          headerLeft: () => (
+            <TouchableOpacity onPress={router.back}>
+              <Ionicons name="arrow-back" size={34} color={Colors.dark} />
+            </TouchableOpacity>
+          ),
+          headerLargeTitle: true,
+          headerTransparent: true,
+          headerRight: () => (
+            <View style={{ flexDirection: "row", gap: 15 }}>
+              <TouchableOpacity>
+                <Ionicons
+                  name="notifications-outline"
+                  color={Colors.dark}
+                  size={30}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <Ionicons name="star-outline" color={Colors.dark} size={30} />
+              </TouchableOpacity>
+            </View>
+          ),
+          headerTitleAlign: "center",
+        }}
+      />
+      <Stack.Screen
+        name="(authenticated)/(modals)/lock"
+        options={{
+          headerShown: false,
+          animation: "none",
+        }}
+      />
     </Stack>
   );
 }
@@ -160,10 +201,12 @@ function RootLayoutNav() {
       tokenCache={tokenCache}
     >
       <QueryClientProvider client={queryClient}>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <StatusBar style="light" />
-          <InitialLayout />
-        </GestureHandlerRootView>
+        <UserInactivityProvider>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <StatusBar style="light" />
+            <InitialLayout />
+          </GestureHandlerRootView>
+        </UserInactivityProvider>
       </QueryClientProvider>
     </ClerkProvider>
   );

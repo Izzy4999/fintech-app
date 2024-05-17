@@ -25,7 +25,7 @@ export default function Page() {
       await signUp?.create({
         emailAddress: email,
       });
-      
+
       await signUp!.prepareVerification({ strategy: "email_code" });
 
       router.push({
@@ -51,12 +51,12 @@ export default function Page() {
       <View style={defaultStyles.container}>
         <Text style={defaultStyles.header}>Lets get started</Text>
         <Text style={defaultStyles.descriptionText}>
-          Enter your phone number. We will send you a confirmation code there
+          Enter your email address. We will send you a confirmation code there
         </Text>
         <View style={styles.inputContainer}>
           <TextInput
             style={[styles.input, { flex: 1 }]}
-            placeholder="Mobile number"
+            placeholder="Email Address"
             keyboardType="email-address"
             value={email}
             onChangeText={setEmail}

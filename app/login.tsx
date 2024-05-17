@@ -46,7 +46,6 @@ export default function Page() {
           supportedFirstFactors.find(isPhoneCodeFactor);
 
         if (firstPhoneFactor) {
-
           const { emailAddressId } = firstPhoneFactor;
 
           await signIn!.prepareFirstFactor({
@@ -78,12 +77,12 @@ export default function Page() {
       <View style={defaultStyles.container}>
         <Text style={defaultStyles.header}>Welcome back</Text>
         <Text style={defaultStyles.descriptionText}>
-          Enter your phone number. We will send you a confirmation code there
+          Enter your emails. We will send you a confirmation code there
         </Text>
         <View style={styles.inputContainer}>
           <TextInput
             style={[styles.input, { flex: 1 }]}
-            placeholder="Mobile number"
+            placeholder="Email Address"
             keyboardType="email-address"
             value={email}
             onChangeText={setEmail}

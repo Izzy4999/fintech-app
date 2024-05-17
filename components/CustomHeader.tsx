@@ -5,6 +5,7 @@ import {
   Touchable,
   TouchableOpacity,
   TextInput,
+  ViewBase,
 } from "react-native";
 import React from "react";
 import { BlurView } from "expo-blur";
@@ -15,7 +16,7 @@ import { Ionicons } from "@expo/vector-icons";
 export default function CustomHeader() {
   const { top } = useSafeAreaInsets();
   return (
-    <BlurView intensity={100} experimentalBlurMethod="dimezisBlurView" tint="extraLight" style={{ paddingTop: top }}>
+    <View  style={{ paddingTop: top, backgroundColor: Colors.background }} >
       <View style={styles.containter}>
         <TouchableOpacity style={styles.roundBtn}>
           <Text style={{ color: "white", fontWeight: "500", fontSize: 16 }}>
@@ -44,7 +45,7 @@ export default function CustomHeader() {
             <Ionicons name="card" size={20} color={Colors.dark} />
         </View>
       </View>
-    </BlurView>
+    </View>
   );
 }
 

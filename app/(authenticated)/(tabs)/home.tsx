@@ -24,12 +24,12 @@ export default function home() {
     });
   };
 
-  console.log(headerHeight)
+  // console.log(headerHeight)
 
   return (
     <ScrollView
       style={{ backgroundColor: Colors.background }}
-      contentContainerStyle={{ paddingTop: headerHeight, paddingBottom: 100}}
+      contentContainerStyle={{ paddingTop: headerHeight, paddingBottom: 100 }}
     >
       <View style={styles.account}>
         <View style={styles.row}>
