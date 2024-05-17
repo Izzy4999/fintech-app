@@ -71,7 +71,7 @@ function InitialLayout() {
     const inAuthgroup = segments[0] === "(authenticated)";
 
     if (isSignedIn && !inAuthgroup) {
-      router.replace("/(authenticated)/(tabs)/home");
+      router.replace("/(authenticated)/(modals)/lock");
     } else if (!isSignedIn) {
       router.replace("/");
     }
