@@ -7,7 +7,7 @@ import { Link, Stack, useRouter, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
-import { TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, TouchableOpacity, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import * as SecureStore from "expo-secure-store";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -78,7 +78,11 @@ function InitialLayout() {
   }, [isSignedIn]);
 
   if (!loaded || !isLoaded) {
-    return null;
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size={"large"} color={Colors.primary} />
+      </View>
+    );
   }
 
   return (
@@ -188,6 +192,20 @@ function InitialLayout() {
         options={{
           headerShown: false,
           animation: "none",
+        }}
+      />
+      <Stack.Screen
+        name="(authenticated)/(modals)/account"
+        options={{
+          presentation: "modal",
+          animation: "fade",
+          title: "",
+          headerTransparent: true,
+          headerLeft: () => (
+            <TouchableOpacity onPress={router.back}>
+              <Ionicons name="close-outline" size={34} color={"#fff"} />
+            </TouchableOpacity>
+          ),
         }}
       />
     </Stack>

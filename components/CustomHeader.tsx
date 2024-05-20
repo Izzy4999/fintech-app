@@ -12,17 +12,20 @@ import { BlurView } from "expo-blur";
 import Colors from "@/constants/Colors";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
+import { Link } from "expo-router";
 
 export default function CustomHeader() {
   const { top } = useSafeAreaInsets();
   return (
-    <View  style={{ paddingTop: top, backgroundColor: Colors.background }} >
+    <View style={{ paddingTop: top, backgroundColor: Colors.background }}>
       <View style={styles.containter}>
-        <TouchableOpacity style={styles.roundBtn}>
-          <Text style={{ color: "white", fontWeight: "500", fontSize: 16 }}>
-            SG
-          </Text>
-        </TouchableOpacity>
+        <Link href={"/(authenticated)/(modals)/account"} asChild>
+          <TouchableOpacity style={styles.roundBtn}>
+            <Text style={{ color: "white", fontWeight: "500", fontSize: 16 }}>
+              SG
+            </Text>
+          </TouchableOpacity>
+        </Link>
 
         <View style={styles.searchSection}>
           <Ionicons
@@ -39,10 +42,10 @@ export default function CustomHeader() {
         </View>
 
         <View style={styles.circle}>
-            <Ionicons name="stats-chart" size={20} color={Colors.dark} />
+          <Ionicons name="stats-chart" size={20} color={Colors.dark} />
         </View>
         <View style={styles.circle}>
-            <Ionicons name="card" size={20} color={Colors.dark} />
+          <Ionicons name="card" size={20} color={Colors.dark} />
         </View>
       </View>
     </View>
