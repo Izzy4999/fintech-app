@@ -11,6 +11,22 @@ import { useAuth, useUser } from "@clerk/clerk-expo";
 import * as ImagePicker from "expo-image-picker";
 import Colors from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
+// import { getAppIcon, setAppIcon } from "expo-dynamic-app-icon";
+
+const ICONS = [
+  {
+    name: "Default",
+    icon: require("@/assets/images/icon.png"),
+  },
+  {
+    name: "Dark",
+    icon: require("@/assets/images/icon-dark.png"),
+  },
+  {
+    name: "Vivid",
+    icon: require("@/assets/images/icon-vivid.png"),
+  },
+];
 
 export default function Account() {
   const { signOut } = useAuth();
